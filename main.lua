@@ -1,5 +1,4 @@
-﻿-- First commit
-local AdvTiledLoader = require("AdvTiledLoader.Loader")
+﻿local AdvTiledLoader = require("AdvTiledLoader.Loader")
 
 -- Includes
 require("camera")
