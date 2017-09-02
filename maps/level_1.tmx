@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="140" height="50" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="Tile" tilewidth="16" tileheight="16" tilecount="6" columns="6">
+  <image source="level_1/tile.png" width="96" height="16"/>
+  <tile id="0">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="visible" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="7" name="groundold2" tilewidth="16" tileheight="16" tilecount="36" columns="18">
+  <image source="groundold2.png" width="288" height="32"/>
+  <tile id="2">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="32"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="y0" value="32"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="32"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="y0" value="32"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="y0" value="0"/>
+    <property name="y1" value="0"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="BG" width="140" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2MsKgCAQQNHo/z+6VRuRHjomNueAm2gRzs2gbQMAgDz2YtWuw6nWS3lNOzylHXroJpeIGTtv8omYt2byGdEN3NHLP/WcH1H3sY6IXq660Mu/jD4Drv7XrLoye7oPrd+g2bPVS6zRezF7tlqJ1bJHs2cWNW+tvLfSe/nVc2pkbc4AAAAAAAAAAAAAAAAAAAAAYKYDMXUC7w==
+  </data>
+ </layer>
+ <layer name="Ground" width="140" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2QELgyAQhuHM/v9vHjFi7jrzztVKfR8QVqTF/LiswgSrePcFPEC4+wIuEJM2GX5bc0Be+szLKhp+a9ueviMaJS9afdGOs445KpmXIJq2vwXWmuK5F5GXfSZm0YKyv4Xs1NQXz5ijSudcZsXSWsjOWciLf54t2ekJ691vv85xLjc9Ii+ftYlc53rmvMfMHD1nj5ybbV7PuL88MTPL9J7f5YSxyMt+TrXcrDzPk//KTM28ed/paucjL/4+pX5pZjzvODx1oHbetH5bHcqNKZ/JRzWXD1H7pP1y+UnzUspBet+4+h2a7LOI82vXOnJGUjX3DJkXua2N30sbnXWdYf2/5HE19QvPlVubyvp7VENyx0VjH7Tj6P1+rqZ46nfLeeEb4573G5H2TbLUWhSVBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnegELOgJ6
+  </data>
+ </layer>
+ <layer name="Spike" width="140" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1cEJADAIA0A/7r+yG/QlSuVugCAhYAQAAAAAwJzcPoCv2Q8AG7r+TzZmXacrXmwDAAAAAAAAAAAAAAAAAAAAAAAA7isY3wAp
+  </data>
+ </layer>
+ <layer name="Ammo" width="140" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1jEKACEMBMBU+f+TbY+DK8QciTBTpZR1DUbwlh8zPOkGVXTpjPwAAGbxP4M7/PVW7YAeU3LP6D3LlBymy+i/K+6hL+zQFwAAAAAAAAAAAAAAAAAAAAAAAACg0gLgDAB/
+  </data>
+ </layer>
+</map>
