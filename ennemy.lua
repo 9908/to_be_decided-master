@@ -2,9 +2,11 @@
 require("entity")
 
 -- constants values for speeds for ennemy
-SPEED = 100
+SPEED = 50	
 HEALTH = 4
 FLYSPEED = 500
+ 	
+ ATTENTION_SPAN = 5
 
 ennemies = {}
 EnnemyClass =  Entity:new()
@@ -16,7 +18,7 @@ function SummonEnnemies(nbr) -- Spawn new Ennemies
 					x = 200 + i * 33 + love.graphics.getWidth()/2, y = 195, x_vel = SPEED, y_vel = 0, 
 					h = 16, w = 11, img = love.graphics.newImage('assets/lvl1/ennemy1.png'), 
 					standing = false, relativepos = 0, onslope = "false", state = "" ,
-					health = HEALTH
+					health = HEALTH, timerDetection = love.timer.getTime() 	
 		}
 		table.insert(ennemies, newEnnemy)
 	end
@@ -66,11 +68,25 @@ function EnnemyClass:stepX( nextX )
 end
 
 function EnnemyClass:basicIA() 
-	-- change x_vel if next pos in X is unreachable => via new stepX
-	
-	--if math.random(0,1000) == 476 then
-	--	self.y_vel = -2.5*FLYSPEED
-	--end
+
+	local random = math.random(0,1000)
+
+	if random > 500 and not(self.x_vel == 0) and self.y_vel == 0 then -- Randomly jumps when moving towards
+		self.y_vel = -(random-500)/2
+	end
+
+	if math.abs(player.x - self.x) < 100 and math.abs(player.y - self.y) < 50 then -- Player detection at in a rectangle of 100 in x and 10 in y
+		if player.x > self.x then
+			self.x_vel = SPEED
+		else
+			self.x_vel = -SPEED
+		end
+		self.timerDetection = love.timer.getTime()
+	elseif math.abs(player.x - self.x) > 150 or math.abs(player.y - self.y) > 60 then-- Lose player detection at a radius of 100
+		if love.timer.getTime() - self.timerDetection > ATTENTION_SPAN then	-- Ennemy stops chasing the player when he stopped detecting him during ATTENTION_SPAN seconds
+			self.x_vel = 0
+		end
+	end	
 
 end
 
