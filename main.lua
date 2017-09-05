@@ -15,7 +15,7 @@ require("waves")
 slowmode = false
 debug = false
 score = 0 -- number of ennemy killed
-
+collides = false
 currentscreenX = 0
 currentscreenY = 0
 screenWidth = love.graphics.getWidth()
@@ -228,6 +228,9 @@ function drawDebug() -- Draws debug messages
 		love.graphics.print("player directionX: "..player.directionX, 459, 10+10*15)
 		-- love.graphics.print("player directionY: "..player.directionY, 459, 10+9*15)
 		-- love.graphics.print("player angle: "..player.angle, 459, 10+10*15)
+
+
+		love.graphics.print("player collides ennemy: "..tostring(collides), 459, 10+20*15)
 		
 		local Count = 0
 

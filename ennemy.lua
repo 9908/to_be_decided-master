@@ -2,10 +2,11 @@
 require("entity")
 
 -- constants values for speeds for ennemy
-SPEED = 50	
+SPEED = 50
 HEALTH = 4
 FLYSPEED = 500
- 	
+JUMP_DAMP = 3
+
  ATTENTION_SPAN = 5
 
 ennemies = {}
@@ -24,6 +25,33 @@ function SummonEnnemies(nbr) -- Spawn new Ennemies
 	end
 end
 
+function EnnemyClass:checkXcollisionsWithPlayer(x_col)
+	local collidingPlayer = nil
+	local ychecking_pos = {self.y-self.h/2+1, self.y+self.h/2-1}
+
+	for j = 1,2,1 do
+		if Point_Rectangle_CollisionCheck(x_col,ychecking_pos[j], player.x,player.y,player.w,player.h) == true then
+			collidingPlayer = player
+		end
+	end
+
+	return collidingPlayer
+end
+
+function EnnemyClass:checkYcollisionsWithPlayer(y_col)
+	local collidingPlayer = nil
+	local xchecking_pos = {self.x-self.w/2+1, self.x+self.w/2-1}
+
+	for j = 1,2,1 do
+		if Point_Rectangle_CollisionCheck(xchecking_pos[j], y_col, player.x,player.y,player.w,player.h) == true then
+			collidingPlayer = player
+		end
+	end
+
+	return collidingPlayer
+end
+
+
 function EnnemyClass:stepX( nextX ) 
 	local x_col -- coordinate of the forward-facing edge
 	if self.x_vel > 0 then -- facing right
@@ -32,39 +60,45 @@ function EnnemyClass:stepX( nextX )
 		x_col = nextX - self.w/2
 	end
 
-	local intersecting_tiles = self:checkXcollisions(x_col)
+	local distX = self:stepXentity(nextX)
+	local player_local = self:checkXcollisionsWithPlayer(x_col)
 
-	-- Check which obstacle is the closest (in this case they are all at the same distance)
-	local distX = nextX - self.x
-
-	for i, tile in ipairs(intersecting_tiles) do
-		--print("tile - x: " .. tile.x .. " , y: " .. tile.y .. " , y0: " .. tostring(tile.y0) .. " , y1: " .. tostring(tile.y1))
-		if self.onslope == "right" then 
-			if self.x_vel > 0 and tile.y0 <= tile.y1 and (tile.y*map.tileHeight+tile.y0) < self.y then -- facing right
-				distX = tile.x*map.tileWidth - (self.x + self.w/2) 
-			elseif self.x_vel < 0 and tile.y0 == tile.y1 and (tile.x+1)*map.tileWidth < self.x then  -- facing left and tile.y0 < tile.y1
-				distX = (tile.x+1)*map.tileWidth - (self.x - self.w/2) 
-			end
-		elseif self.onslope == "left" then 
-			if self.x_vel > 0 and tile.y0 == tile.y1 and (tile.x)*map.tileWidth > self.x  then -- facing right
-				distX = tile.x*map.tileWidth - (self.x + self.w/2) 
-			elseif self.x_vel < 0 and tile.y0 >= tile.y1 and (tile.y*map.tileHeight+tile.y0) < self.y then  -- facing left and tile.y0 < tile.y1
-				distX = (tile.x+1)*map.tileWidth - (self.x - self.w/2) 
-			end	
-		else 	
-			if self.x_vel > 0 and tile.y0 <= tile.y1 then -- facing right
-				distX = tile.x*map.tileWidth - (self.x + self.w/2) 
-			elseif self.x_vel < 0 and tile.y0 >= tile.y1 then  -- facing left and tile.y0 < tile.y1
-				distX = (tile.x+1)*map.tileWidth - (self.x - self.w/2) 
-			end
+	if not(player_local == nil) then
+		if self.x_vel > 0 then
+			distX = player_local.x-player_local.w/2 - (self.x + self.w/2)
+		else
+			distX = player_local.x+player_local.w/2 - (self.x - self.w/2) 
 		end
-	end
 
-	if distX == 0 then -- no X movement
-		self.x_vel = - self.x_vel
 	end
 
 	return distX
+end
+
+function EnnemyClass:stepY( nextY )
+	local y_col -- coordinate of the forward-facing edge
+
+	if self.y_vel < 0 then -- facing up
+		y_col = nextY - self.h/2
+	else 				  -- facing down
+		y_col = nextY + self.h/2
+	end
+
+	local  distY = self:stepYentity(nextY)
+	
+	local player_local = self:checkYcollisionsWithPlayer(y_col)
+
+	if not(player_local == nil) then
+		if self.y_vel > 0 then
+			distY = player_local.y-player_local.h/2 - (self.y + self.h/2)
+		else
+			distY = player_local.y+player_local.h/2 - (self.y - self.h/2) 
+		end
+		distY = 0
+
+	end
+
+	return distY
 end
 
 function EnnemyClass:basicIA() 
@@ -72,7 +106,7 @@ function EnnemyClass:basicIA()
 	local random = math.random(0,1000)
 
 	if random > 500 and not(self.x_vel == 0) and self.y_vel == 0 then -- Randomly jumps when moving towards
-		self.y_vel = -(random-500)/2
+		self.y_vel = -(random-500)/JUMP_DAMP
 	end
 
 	if math.abs(player.x - self.x) < 100 and math.abs(player.y - self.y) < 50 then -- Player detection at in a rectangle of 100 in x and 10 in y

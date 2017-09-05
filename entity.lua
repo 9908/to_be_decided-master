@@ -54,7 +54,6 @@ function Entity:new (o)
   return o
 end
 
-
 function Entity:checkXcollisions( x_col )
 	-- returns array of tiles intersecting {x = , y = }
 	local tiles = {} 	 -- array of tiles
@@ -107,103 +106,7 @@ function Entity:checkYcollisions( y_col )
 	return tiles
 end
 
-function Entity:checkAmmocollisions( x_col, y_col )
-	-- returns array of tiles intersecting {x = , y = }
-	local tiles = {} 	 -- array of tiles
-	local layer = map.tl["Ammo"]
-	local ychecking_pos = {self.y-self.h/2+1, self.y+self.h/2-1}
-
-	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
-		local tileX = math.floor(x_col / map.tileWidth)
-		local tileY = math.floor(ychecking_pos[i] / map.tileHeight)
-
-		local tile = layer.tileData(tileX, tileY)
-		if not(tile==nil) then
-			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
-			layer.tileData:set(tileX, tileY,nil)
-			table.insert(tiles, mytile)
-		end
-	end
-
-	local xchecking_pos = {self.x-self.w/2+1, self.x+self.w/2-1}
-
-	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
-		local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
-		local tileY = math.floor(y_col / map.tileHeight)
-
-		local tile = layer.tileData(tileX, tileY)
-		if not(tile==nil) then
-			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
-			tile.properties["visible"] = false
-			layer.tileData:set(tileX, tileY,nil)
-			table.insert(tiles, mytile)
-		end
-	end
-
---/???? Usefullness ??
-
-	-- if self.standing then -- standing 
-	-- 	y_col = y_col - 1 
-	-- 	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
-	-- 	local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
-	-- 	local tileY = math.floor(y_col / map.tileHeight)
-	-- 	local tile = layer.tileData(tileX, tileY)
-	-- 	if not(tile==nil) then
-	-- 		local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
-	-- 		table.insert(tiles, mytile)
-	-- 	end
-	-- end
-	-- end
-
-	return tiles
-end
-
-function Entity:checkSpikecollisions( x_col, y_col )
-	-- returns array of tiles intersecting {x = , y = }
-	local tiles = {} 	 -- array of tiles
-	local layer = map.tl["Spike"]
-	local ychecking_pos = {self.y-self.h/2+1, self.y+self.h/2-1}
-
-	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
-		local tileX = math.floor(x_col / map.tileWidth)
-		local tileY = math.floor(ychecking_pos[i] / map.tileHeight)
-		local tile = layer.tileData(tileX, tileY)
-		if not(tile==nil) then
-			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
-			table.insert(tiles, mytile)
-		end
-	end
-
-	local xchecking_pos = {self.x-self.w/2+1, self.x+self.w/2-1}
-
-	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
-		local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
-		local tileY = math.floor(y_col / map.tileHeight)
-		local tile = layer.tileData(tileX, tileY)
-		if not(tile==nil) then
-			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
-			table.insert(tiles, mytile)
-		end
-	end
-
-
-	if self.standing then -- standing
-		y_col = y_col - 1 
-		for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
-		local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
-		local tileY = math.floor(y_col / map.tileHeight)
-		local tile = layer.tileData(tileX, tileY)
-		if not(tile==nil) then
-			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
-			table.insert(tiles, mytile)
-		end
-	end
-	end
-
-	return tiles
-end
-
-function Entity:stepX( nextX ) 
+function Entity:stepXentity( nextX ) 
 	local x_col -- coordinate of the forward-facing edge
 	if self.x_vel > 0 then -- facing right
 		x_col = nextX + self.w/2
@@ -237,12 +140,13 @@ function Entity:stepX( nextX )
 				distX = (tile.x+1)*map.tileWidth - (self.x - self.w/2) 
 			end
 		end
+
 	end
-	
+
 	return distX
 end
 
-function Entity:stepY( nextY )
+function Entity:stepYentity( nextY )
 	local y_col -- coordinate of the forward-facing edge
 
 	if self.y_vel < 0 then -- facing up
@@ -305,8 +209,91 @@ function Entity:stepY( nextY )
 		end
 	end
 
-	return distY
+	return distY-- C'EST DANS LA CLASSE MAIS CEST UNIQUEMENT UTILISER PAR LE PLAYER
+	
 end
+
+function Entity:checkAmmocollisions( x_col, y_col ) -- Check if collides with collectible ammos on map
+	-- returns array of tiles intersecting {x = , y = }
+	local tiles = {} 	 -- array of tiles
+	local layer = map.tl["Ammo"]
+	local ychecking_pos = {self.y-self.h/2+1, self.y+self.h/2-1}
+
+	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
+		local tileX = math.floor(x_col / map.tileWidth)
+		local tileY = math.floor(ychecking_pos[i] / map.tileHeight)
+
+		local tile = layer.tileData(tileX, tileY)
+		if not(tile==nil) then
+			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
+			layer.tileData:set(tileX, tileY,nil)
+			table.insert(tiles, mytile)
+		end
+	end
+
+	local xchecking_pos = {self.x-self.w/2+1, self.x+self.w/2-1}
+
+	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
+		local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
+		local tileY = math.floor(y_col / map.tileHeight)
+
+		local tile = layer.tileData(tileX, tileY)
+		if not(tile==nil) then
+			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
+			tile.properties["visible"] = false
+			layer.tileData:set(tileX, tileY,nil)
+			table.insert(tiles, mytile)
+		end
+	end 
+
+	return tiles
+end
+
+function Entity:checkSpikecollisions( x_col, y_col )
+	-- returns array of tiles intersecting {x = , y = }
+	local tiles = {} 	 -- array of tiles
+	local layer = map.tl["Spike"]
+	local ychecking_pos = {self.y-self.h/2+1, self.y+self.h/2-1}
+
+	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
+		local tileX = math.floor(x_col / map.tileWidth)
+		local tileY = math.floor(ychecking_pos[i] / map.tileHeight)
+		local tile = layer.tileData(tileX, tileY)
+		if not(tile==nil) then
+			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
+			table.insert(tiles, mytile)
+		end
+	end
+
+	local xchecking_pos = {self.x-self.w/2+1, self.x+self.w/2-1}
+
+	for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
+		local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
+		local tileY = math.floor(y_col / map.tileHeight)
+		local tile = layer.tileData(tileX, tileY)
+		if not(tile==nil) then
+			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
+			table.insert(tiles, mytile)
+		end
+	end
+
+
+	if self.standing then -- standing
+		y_col = y_col - 1 
+		for i = 1,2,1 do -- check for all ychecking_pos (here size = 2)
+		local tileX = math.floor(xchecking_pos[i] / map.tileWidth)
+		local tileY = math.floor(y_col / map.tileHeight)
+		local tile = layer.tileData(tileX, tileY)
+		if not(tile==nil) then
+			local mytile = {x = tileX, y = tileY, y0 = tile.properties["y0"], y1 = tile.properties["y1"]}
+			table.insert(tiles, mytile)
+		end
+	end
+	end
+
+	return tiles
+end
+
 
 function Entity:collide(event)
 	if event == "floor" then
@@ -371,6 +358,15 @@ function checkCollide(x,y) -- Check collision with ground
 	end
 end
 
+function Point_Rectangle_CollisionCheck(x1,y1, x2,y2,w2,h2)
+	local check
+	if x1 > (x2 - w2/2) and  x1 < (x2 + w2/2) and y1 > (y2 - h2/2) and  y1 < (y2 + h2/2) then
+		check = true
+	else
+		check = false
+	end
+	return check
+end
 
 function Entity:update(dt)
 
@@ -412,3 +408,4 @@ function drawEntities()
 		entity:draw()
 	end
 end
+

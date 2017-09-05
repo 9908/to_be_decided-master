@@ -146,12 +146,13 @@ function PlayerClass:stop()
 end
 
 
-function checkCollideEnnemy(x,y,damage) -- Check collision with ennemy. Damage enemy if there is a collision
+function checkCollideEnnemy(x,y,damage) -- Check point collision with ennemy. Damage enemy if there is a collision (for bullet)
 
 	collision = false
 	for i, ennemy in ipairs(ennemies) do
 		--print("x: " .. x .. " , y: " .. y .. " , ennemy x: " .. ennemy.x .. " , ennemy y: " .. ennemy.y)
-		if x > (ennemy.x - ennemy.w/2) and  x < (ennemy.x + ennemy.w/2) and y > (ennemy.y - ennemy.h/2) and  y < (ennemy.y + ennemy.h/2) then
+		--if x > (ennemy.x - ennemy.w/2) and  x < (ennemy.x + ennemy.w/2) and y > (ennemy.y - ennemy.h/2) and  y < (ennemy.y + ennemy.h/2) then
+		if Point_Rectangle_CollisionCheck(x,y, ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
 			ennemy.health = ennemy.health - damage;
 			if ennemy.health < 0 then
 				table.remove(ennemies,i)
@@ -163,6 +164,84 @@ function checkCollideEnnemy(x,y,damage) -- Check collision with ennemy. Damage e
 
 	return collision
 end
+
+function PlayerClass:checkXcollisionsWithEnnemies(x_col)
+	local collidingEnnemies = {}
+	local ychecking_pos = {self.y-self.h/2+1, self.y+self.h/2-1}
+
+	for i, ennemy in ipairs(ennemies) do
+		for j = 1,2,1 do
+			if Point_Rectangle_CollisionCheck(x_col,ychecking_pos[j], ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
+				table.insert(collidingEnnemies, ennemy)
+			end
+		end
+	end
+
+	return collidingEnnemies
+end
+
+function PlayerClass:checkYcollisionsWithEnnemies(y_col)
+	local collidingEnnemies = {}
+	local xchecking_pos = {self.x-self.w/2+1, self.x+self.w/2-1}
+
+	for i, ennemy in ipairs(ennemies) do
+		for j = 1,2,1 do
+			if Point_Rectangle_CollisionCheck(xchecking_pos[j],y_col, ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
+				table.insert(collidingEnnemies, ennemy)
+		collides = true
+			end
+		end
+	end
+
+	return collidingEnnemies
+end
+
+function PlayerClass:stepX( nextX ) -- C'EST DANS LA CLASSE MAIS CEST UNIQUEMENT UTILISER PAR LE PLAYER
+	local x_col -- coordinate of the forward-facing edge
+	if self.x_vel > 0 then -- facing right
+		x_col = nextX + self.w/2
+	elseif self.x_vel < 0 then  -- facing left
+		x_col = nextX - self.w/2
+	end
+	local distX = self:stepXentity(nextX)
+	local ennemies_local = self:checkXcollisionsWithEnnemies(x_col)
+
+	for i, ennemy in ipairs(ennemies_local) do
+		if self.x_vel > 0 then
+			distX = ennemy.x-ennemy.w/2 - (self.x + self.w/2)
+		else
+			distX = ennemy.x+ennemy.w/2 - (self.x - self.w/2) 
+		end
+	end
+
+	return distX
+end
+
+function PlayerClass:stepY( nextY )
+	local y_col -- coordinate of the forward-facing edge
+
+	if self.y_vel < 0 then -- facing up
+		y_col = nextY - self.h/2
+	else 				  -- facing down
+		y_col = nextY + self.h/2
+	end
+
+	local  distY = self:stepYentity(nextY)
+	
+	local ennemies_local = self:checkYcollisionsWithEnnemies(y_col)
+
+	for i, ennemy in ipairs(ennemies_local) do
+		if self.y_vel > 0 then
+			distY = ennemy.y-ennemy.h/2 - (self.y + self.h/2)
+		else
+			distY = ennemy.y+ennemy.h/2 - (self.y - self.h/2) 
+		end
+	end
+
+	return distY-- C'EST DANS LA CLASSE MAIS CEST UNIQUEMENT UTILISER PAR LE PLAYER
+	
+end
+
 
 function PlayerClass:hit(  )
 	if self.life > 0 then
