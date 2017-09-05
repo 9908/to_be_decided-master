@@ -155,7 +155,6 @@ function checkCollideEnnemy(x,y,damage) -- Check collision with ennemy. Damage e
 			ennemy.health = ennemy.health - damage;
 			if ennemy.health < 0 then
 				table.remove(ennemies,i)
-				--ennemy.y_vel = -2.5*FLYSPEED
 				score = score + 1
 			end
 			collision = true
@@ -210,7 +209,7 @@ function PlayerClass:shoot(weapon) -- weapon type = 0 for bazooka, 1 for regular
 
 		animBullet = newAnimation(love.graphics.newImage("assets/weapon/bullet.png"), 14, 14, 0.1, 0)
 		animBullet:setMode("loop")
-		newBullet = { x = player.x  - player.w/2, y = player.y-player.h, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.5, timerlife = 4, spawn = true, type = weapon, damage = 5}
+		newBullet = { x = player.x  - player.w/2, y = player.y-player.h, w=14,h=14,speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.5, timerlife = 4, spawn = true, type = weapon, damage = 5}
 	
 	elseif weapon == 1 then -- regular shooting
 		camera.shaketype = "shooting"
@@ -224,7 +223,7 @@ function PlayerClass:shoot(weapon) -- weapon type = 0 for bazooka, 1 for regular
 		bullet_v = math.random(-60,60)
 		animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 21, 14, 0.1, 0)
 		animBullet:setMode("loop")
-		newBullet = { x = player.x + bullet_u/math.abs(bullet_u) * player.w/2 - 3*player.w/4, y = player.y - 5, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
+		newBullet = { x = player.x + bullet_u/math.abs(bullet_u) * player.w/2 - 3*player.w/4, y = player.y - 5, w=21,h=14, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
 	end
 
 	table.insert(player.bullets, newBullet)
@@ -266,9 +265,9 @@ function PlayerClass:update(dt)
 		bullet.img:update(dt)
 
 		if (bullet.timer < 0 and bullet.spawn == true )then -- Spawn trail behind bullet
-			animWolk = newAnimation(love.graphics.newImage("assets/weapon/wolk.png"), 14, 14, 0.025, 0)
+			animWolk = newAnimation(love.graphics.newImage("assets/weapon/wolk.png"), bullet.w, bullet.h, 0.025, 0)
 			animWolk:setMode("once")
-			newTrail = { x = bullet.x +14, y = bullet.y+14, angle = math.random(0,365), img = animWolk, timer = 0.5}
+			newTrail = { x = bullet.x+bullet.w/2, y = bullet.y+bullet.h/2, angle = math.random(0,365), img = animWolk, timer = 0.5}
 			table.insert(bullet.trailarray, 1, newTrail)
 			bullet.timer = 0.0075+0.0015*math.random(-10, 10)
 		end	
@@ -285,7 +284,7 @@ function PlayerClass:update(dt)
 			bullet.spawn = false
 		end
 
-		if bullet.timerspawn > 0 and ( checkCollide(bullet.x+7,bullet.y+7) or checkCollideEnnemy(bullet.x+7,bullet.y+7, bullet.damage) ) then -- Check collision with ground or ennemy
+		if bullet.timerspawn > 0 and ( checkCollide(bullet.x,bullet.y) or checkCollideEnnemy(bullet.x,bullet.y, bullet.damage) ) then -- Check collision with ground or ennemy
 			bullet.timerspawn = 0
 
 			if bullet.type == 0 then 	-- Spawn explosion
@@ -377,14 +376,24 @@ function  PlayerClass:draw( )
 	for i, bullet in ipairs(self.bullets) do
 		if bullet.timerspawn > 0 then
 			if bullet.bulletype == 1 then
-				bullet.img:draw(bullet.x, bullet.y, math.atan(bullet.speedy/bullet.speedx))
-			else 
-				bullet.img:draw(bullet.x, bullet.y, 0)
+				bullet.img:draw(bullet.x-bullet.w/2, bullet.y-bullet.h/2, math.atan(bullet.speedy/bullet.speedx))
+				if debug == true then
+					love.graphics.setColor(255,0,0)
+					love.graphics.rectangle("fill", bullet.x-1, bullet.y -1, 2, 2)
+					love.graphics.setColor(255,255,255)
+				end
+			else
+				bullet.img:draw(bullet.x-bullet.w/2, bullet.y-bullet.h/2, 0)
+				if debug == true then
+					love.graphics.setColor(255,0,0)
+					love.graphics.rectangle("fill", bullet.x-1, bullet.y -1, 2, 2)
+					love.graphics.setColor(255,255,255)
+				end
 			end
 			
 		end
 		for j, trail in ipairs(bullet.trailarray) do
-			trail.img:draw(trail.x, trail.y, 0, 1, 1, 14, 14)
+			trail.img:draw(trail.x, trail.y, 0, 1, 1, bullet.w, bullet.h) 
 			--love.graphics.draw(trail.img, trail.x, trail.y, trail.angle, 1, 1, 14, 14)
 		end
 	end

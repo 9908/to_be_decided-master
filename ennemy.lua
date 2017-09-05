@@ -16,7 +16,7 @@ function SummonEnnemies(nbr) -- Spawn new Ennemies
 	for i = 1,nbr do
 		local newEnnemy = EnnemyClass:new{	
 					x = 200 + i * 33 + love.graphics.getWidth()/2, y = 195, x_vel = SPEED, y_vel = 0, 
-					h = 16, w = 11, img = love.graphics.newImage('assets/lvl1/ennemy1.png'), 
+					h = 26, w = 11, img = love.graphics.newImage('assets/lvl1/ennemy1.png'), 
 					standing = false, relativepos = 0, onslope = "false", state = "" ,
 					health = HEALTH, timerDetection = love.timer.getTime() 	
 		}
@@ -115,9 +115,9 @@ function EnnemyClass:draw()
 			love.graphics.setColor(255,255,255)
 		end
 		if self.x_vel < 0 then 
-			love.graphics.draw(self.img,self.x-self.w/2 - 5,self.y - self.h/2 - 10)
+			love.graphics.draw(self.img,self.x-self.w/2 - 5,self.y - self.h/2 )
 		else 
-			love.graphics.draw(self.img,self.x-self.w/2 + 17,self.y - self.h/2 - 10,0,-1,1)
+			love.graphics.draw(self.img,self.x-self.w/2 + 17,self.y - self.h/2 ,0,-1,1)
 		end
 
 end
