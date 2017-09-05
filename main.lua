@@ -15,7 +15,7 @@ require("waves")
 slowmode = false
 debug = false
 score = 0 -- number of ennemy killed
-collides = false
+
 currentscreenX = 0
 currentscreenY = 0
 screenWidth = love.graphics.getWidth()
@@ -39,10 +39,8 @@ function love.load() -- Initial loads
 				gravity = 1100
 				}
 	
-
 	loadArt()
 	loadSound()
-
 
 	--collectgarbage("stop") -- ??? CAUSE FOR THE FPS LOSSES ???
 
@@ -54,7 +52,6 @@ end
 function love.draw() -- Draw at each iteration
 
 	if GAMESCREEN == "play" then
-
 
 	-- Set camera position
 	camera:set(0,0)
@@ -83,7 +80,6 @@ function love.draw() -- Draw at each iteration
 	-- Use new font and draw additional messages
 	drawMessages()
 	
-
 	-- Draw UI
 	love.graphics.setColor(255,0,0)
 	love.graphics.rectangle("fill", 2*18,2*32,2*13*player.life,2*6) -- draw life bar
@@ -96,7 +92,6 @@ function love.draw() -- Draw at each iteration
 	useCustomFont(40)
 	love.graphics.printf("Kills "..score, 0, 0.08*love.graphics.getHeight(), 0.12*love.graphics.getWidth(),"center") -- Display Score
 
-
 	-- Use default font and draw debug messages
 	drawDebug()
 
@@ -106,13 +101,6 @@ function love.draw() -- Draw at each iteration
      	return
    	end
    	love.timer.sleep(next_time - cur_time) -- Fixed a cap of FPS at 60
-
-   	-- Je pense que le problème vient de l'algorithme même du jeu.
-   	-- Relire le code ! et optimiser tt ça
-   	-- https://love2d.org/wiki/Category:Tutorials
-   	-- https://love2d.org/wiki/Tutorial:Efficient_Tile-based_Scrolling
-
-   	-- https://www.google.be/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=computational%20efficiency%20love2d
 
    	elseif GAMESCREEN == "menu" then
 		useDefaultFont()
@@ -229,8 +217,6 @@ function drawDebug() -- Draws debug messages
 		-- love.graphics.print("player directionY: "..player.directionY, 459, 10+9*15)
 		-- love.graphics.print("player angle: "..player.angle, 459, 10+10*15)
 
-
-		love.graphics.print("player collides ennemy: "..tostring(collides), 459, 10+20*15)
 		
 		local Count = 0
 

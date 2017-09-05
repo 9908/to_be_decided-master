@@ -15,12 +15,6 @@ STARTPOSY = 210
 
 PlayerClass =  Entity:new()
 
--- To add to basic movements :
-	-- Dust
-	-- Image squashe and stretch
-	-- Fixing constant value for smooth control in all conditions
-
-	
 player = PlayerClass:new{
 
 			x = STARTPOSX,
@@ -150,8 +144,6 @@ function checkCollideEnnemy(x,y,damage) -- Check point collision with ennemy. Da
 
 	collision = false
 	for i, ennemy in ipairs(ennemies) do
-		--print("x: " .. x .. " , y: " .. y .. " , ennemy x: " .. ennemy.x .. " , ennemy y: " .. ennemy.y)
-		--if x > (ennemy.x - ennemy.w/2) and  x < (ennemy.x + ennemy.w/2) and y > (ennemy.y - ennemy.h/2) and  y < (ennemy.y + ennemy.h/2) then
 		if Point_Rectangle_CollisionCheck(x,y, ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
 			ennemy.health = ennemy.health - damage;
 			if ennemy.health < 0 then
@@ -196,7 +188,7 @@ function PlayerClass:checkYcollisionsWithEnnemies(y_col)
 	return collidingEnnemies
 end
 
-function PlayerClass:stepX( nextX ) -- C'EST DANS LA CLASSE MAIS CEST UNIQUEMENT UTILISER PAR LE PLAYER
+function PlayerClass:stepX( nextX ) 
 	local x_col -- coordinate of the forward-facing edge
 	if self.x_vel > 0 then -- facing right
 		x_col = nextX + self.w/2
@@ -227,7 +219,7 @@ function PlayerClass:stepY( nextY )
 	end
 
 	local  distY = self:stepYentity(nextY)
-	
+
 	local ennemies_local = self:checkYcollisionsWithEnnemies(y_col)
 
 	for i, ennemy in ipairs(ennemies_local) do
@@ -238,7 +230,7 @@ function PlayerClass:stepY( nextY )
 		end
 	end
 
-	return distY-- C'EST DANS LA CLASSE MAIS CEST UNIQUEMENT UTILISER PAR LE PLAYER
+	return distY
 	
 end
 

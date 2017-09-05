@@ -209,7 +209,7 @@ function Entity:stepYentity( nextY )
 		end
 	end
 
-	return distY-- C'EST DANS LA CLASSE MAIS CEST UNIQUEMENT UTILISER PAR LE PLAYER
+	return distY
 	
 end
 
@@ -249,7 +249,7 @@ function Entity:checkAmmocollisions( x_col, y_col ) -- Check if collides with co
 	return tiles
 end
 
-function Entity:checkSpikecollisions( x_col, y_col )
+function Entity:checkSpikecollisions( x_col, y_col ) -- check if collides with a spike
 	-- returns array of tiles intersecting {x = , y = }
 	local tiles = {} 	 -- array of tiles
 	local layer = map.tl["Spike"]
