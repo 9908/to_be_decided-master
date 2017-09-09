@@ -4,21 +4,23 @@ require("entity")
 require("ennemy")
 
 -- constants values for speeds for player 
-WALK = 140
-MAX_YSPEED = 200
-JUMP_VERT = -250
-JUMP_TIME_MAX = 135
-SHOOT_DELAY = 12
+WALK = 140			-- Walk speed
+INIT_WALK = 5		-- Initial distance before starting to run
+END_RUN_DAMP = 1000	-- Damping to stop
+MAX_YSPEED = 200	-- Maximum falling speed
+JUMP_VERT = -250	-- Jump velocity
+JUMP_TIME_MAX = 135	-- Max time of extra jump when maintaining jump button
+SHOOT_DELAY = 5		-- Delay between new bullets when holding shoot button
 
-STARTPOSX = 1000
-STARTPOSY = 210
+STARTPOSX = 1000	-- Initial player position on map
+STARTPOSY = 210		-- Initial player position on map
+
 
 PlayerClass =  Entity:new()
 
 player = PlayerClass:new{
 
 			x = STARTPOSX,
-			--y = 695,
 			y = STARTPOSY,
 			h = 16,
 			w = 11,
@@ -44,7 +46,6 @@ player = PlayerClass:new{
 			jump_vel = JUMP_VERT,
 			jump_timer = JUMP_TIME_MAX,
 			speedX = WALK,
-			flySpeed = MAX_YSPEED,
 			angle = 0,
 
 			state = "", -- will be used for animating char
@@ -92,7 +93,7 @@ function PlayerClass:right(firsttime_move)
 	if  firsttime_move == true  then 
 			self.pos_start = self.x
 	end		
-	if self.x-self.pos_start < 10 then
+	if self.x-self.pos_start < INIT_WALK then
 			self.x_vel = self.speedX/2
 	else
 		self.x_vel = self.speedX
@@ -106,7 +107,7 @@ function PlayerClass:left(firsttime_move)
 	if  firsttime_move == true  then 
 			self.pos_start = self.x
 	end			
-	if self.pos_start-self.x < 10 then
+	if self.pos_start-self.x < INIT_WALK then
 			self.x_vel = -1*self.speedX/2
 	else
 		self.x_vel = -1*self.speedX
@@ -292,7 +293,8 @@ function PlayerClass:shoot(weapon) -- weapon type = 0 for bazooka, 1 for regular
 			bullet_u = -1000
 		end
 		bullet_v = math.random(-60,60)
-		animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 21, 14, 0.1, 0)
+		--animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 21, 14, 0.1, 0)
+		animBullet = newAnimation(love.graphics.newImage("assets/weapon/bullet.png"), 14, 14, 0.1, 0)
 		animBullet:setMode("loop")
 		newBullet = { x = player.x + bullet_u/math.abs(bullet_u) * player.w/2 - 3*player.w/4, y = player.y - 5, w=21,h=14, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
 	end
@@ -398,7 +400,7 @@ function PlayerClass:update(dt)
 	self.state = self:getState()
 
 	self.y_vel = self.y_vel + (world.gravity * dt)
-	self.y_vel = math.min(self.y_vel,self.flySpeed)
+	self.y_vel = math.min(self.y_vel,MAX_YSPEED)
 
 	local nextY = self.y + (self.y_vel*dt)
 	local nextX = self.x + (self.x_vel*dt)
@@ -420,9 +422,9 @@ function PlayerClass:update(dt)
 
 	if self.getstopped == true then
 		if self.x_vel > 0 then
-			self.x_vel = self.x_vel - 400*dt
+			self.x_vel = self.x_vel - END_RUN_DAMP*dt
 		elseif self.x_vel < 0 then
-			self.x_vel = self.x_vel + 400*dt
+			self.x_vel = self.x_vel + END_RUN_DAMP*dt
 		end
 
 		if (self.directionX == "left"and self.x_vel > 0) or (self.directionX == "right"and self.x_vel < 0) then

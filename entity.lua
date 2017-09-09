@@ -1,8 +1,8 @@
 ﻿-- Entity Class
 
 
-FLYSPEED = 500
-HIT_DELAY = 50
+FLYSPEED = 500	-- Maximum falling speed
+HIT_DELAY = 50	
 
 Entity = {	x = 1375,
 		  	y = 295,
