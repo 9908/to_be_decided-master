@@ -57,7 +57,7 @@ function drawFX()
 
 	-- Draw Animations
 	for i, anim in ipairs(anims) do
-		anim.animation:draw(anim.x,anim.y,0,anim.scale,anim.scale,0,0)
+		anim.animation:draw(anim.x,anim.y,0,anim.scaleX,anim.scaleX,0,0)
 	end
 
 	-- Draw flicker

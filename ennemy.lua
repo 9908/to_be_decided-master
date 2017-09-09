@@ -2,21 +2,21 @@
 require("entity")
 
 -- constants values for speeds for ennemy
-SPEED = 50
-HEALTH = 4
-FLYSPEED = 500
+SPEED = 50 -- Lateral constant speed (MRU)
+HEALTH = 4	-- number of lives
+FLYSPEED = 500 
 JUMP_DAMP = 3
 
- ATTENTION_SPAN = 5
+ATTENTION_SPAN = 5 -- Ennemy stops chasing the player when he stopped detecting him during ATTENTION_SPAN seconds
 
 ennemies = {}
 EnnemyClass =  Entity:new()
 
-function SummonEnnemies(nbr) -- Spawn new Ennemies
+function SummonEnnemies(local_x,local_y,nbr) -- Spawn new Ennemies
 	
 	for i = 1,nbr do
 		local newEnnemy = EnnemyClass:new{	
-					x = 200 + i * 33 + love.graphics.getWidth()/2, y = 195, x_vel = SPEED, y_vel = 0, 
+					x = local_x + i * 33 + love.graphics.getWidth()/2, y = local_y, x_vel = SPEED, y_vel = 0, 
 					h = 26, w = 11, img = love.graphics.newImage('assets/lvl1/ennemy1.png'), 
 					standing = false, relativepos = 0, onslope = "false", state = "" ,
 					health = HEALTH, timerDetection = love.timer.getTime() 	

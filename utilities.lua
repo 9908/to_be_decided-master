@@ -122,17 +122,21 @@ function keyboardControls(dt)
 	-- toggle slowmode
 	if love.keyboard.isDown("a") then
 		slowmode = true
-	elseif love.keyboard.isDown("z") then
+	elseif love.keyboard.isDown("s") then
 		slowmode = false	
 	end
 
 	-- toggle debug text messages
 	if love.keyboard.isDown("q") then
 		debug = true
-	elseif love.keyboard.isDown("s") then
+	elseif love.keyboard.isDown("w") then
 		debug = false	
 	end
 
+	-- spawn ennemies
+	if love.keyboard.isDown("z") then
+		SummonEnnemies(player.x - love.graphics.getWidth()/2,player.y-200,1)
+	end
 
 
 

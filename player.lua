@@ -10,7 +10,7 @@ END_RUN_DAMP = 1000	-- Damping to stop
 MAX_YSPEED = 200	-- Maximum falling speed
 JUMP_VERT = -250	-- Jump velocity
 JUMP_TIME_MAX = 135	-- Max time of extra jump when maintaining jump button
-SHOOT_DELAY = 5		-- Delay between new bullets when holding shoot button
+SHOOT_DELAY = 15	-- Delay between new bullets when holding shoot button
 
 STARTPOSX = 1000	-- Initial player position on map
 STARTPOSY = 210		-- Initial player position on map
@@ -140,20 +140,31 @@ function PlayerClass:stop()
 	end
 end
 
+-- TODO  checkCollideEnnemy, checkXcollisionsWithEnnemies and checkYcollisionsWithEnnemies : 3 times the same loop !!! To modify
 
-function checkCollideEnnemy(x,y,damage) -- Check point collision with ennemy. Damage enemy if there is a collision (for bullet)
+function checkCollideEnnemy(local_x,local_y,damage,towards_right) -- Check point collision with ennemy. Damage enemy if there is a collision (for bullet)
 
 	collision = false
 	for i, ennemy in ipairs(ennemies) do
-		if Point_Rectangle_CollisionCheck(x,y, ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
+		if Point_Rectangle_CollisionCheck(local_x,local_y, ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
 			ennemy.health = ennemy.health - damage;
 			if ennemy.health < 0 then
 				table.remove(ennemies,i)
 				score = score + 1
 			end
 			collision = true
+			animImg = newAnimation(love.graphics.newImage("assets/weapon/hit_explosion.png"), 32, 31, 0.1, 0) -- TODO SHOULD BE INITIATED ONLY ONCE
+			animImg:setMode("once")
+
+			if towards_right == 1 then
+				table.insert(anims,{ x = ennemy.x - 32/2 , y = local_y-32/2  , animation = animImg, scaleX = 1, scaleY = 1})
+			else
+				table.insert(anims,{ x = ennemy.x + ennemy.w+32/2, y = local_y+32/2 , animation = animImg, scaleX = -1, scaleY = 1})
+			end
 		end
 	end
+
+	
 
 	return collision
 end
@@ -288,15 +299,14 @@ function PlayerClass:shoot(weapon) -- weapon type = 0 for bazooka, 1 for regular
 		camera.shakedir = 0
 		player.canShoot = false
 		if self.directionX == "right" then
-			bullet_u = 1000 
+			bullet_u = 500 
 		else
-			bullet_u = -1000
+			bullet_u = -500
 		end
-		bullet_v = math.random(-60,60)
-		--animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 21, 14, 0.1, 0)
-		animBullet = newAnimation(love.graphics.newImage("assets/weapon/bullet.png"), 14, 14, 0.1, 0)
+		bullet_v = math.random(-30,30)
+		animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 21, 14, 0.1, 0)
 		animBullet:setMode("loop")
-		newBullet = { x = player.x + bullet_u/math.abs(bullet_u) * player.w/2 - 3*player.w/4, y = player.y - 5, w=21,h=14, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
+		newBullet = { x = player.x + bullet_u/math.abs(bullet_u) , y = player.y - 5, w=21,h=14, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
 	end
 
 	table.insert(player.bullets, newBullet)
@@ -357,13 +367,14 @@ function PlayerClass:update(dt)
 			bullet.spawn = false
 		end
 
-		if bullet.timerspawn > 0 and ( checkCollide(bullet.x,bullet.y) or checkCollideEnnemy(bullet.x,bullet.y, bullet.damage) ) then -- Check collision with ground or ennemy
-			bullet.timerspawn = 0
+		if bullet.type == 0 then 
+			if bullet.timerspawn > 0 and (checkCollide(bullet.x,bullet.y) or checkCollideEnnemy(bullet.x,bullet.y, bullet.damage, bullet.speedx/math.abs(bullet.speedx))) then -- Check collision with ground or ennemy
+				bullet.timerspawn = 0
 
-			if bullet.type == 0 then 	-- Spawn explosion
+				-- Spawn explosion
 				animImg = newAnimation(love.graphics.newImage("assets/weapon/explosion2.png"), 67, 67, 0.1, 0)
 				animImg:setMode("once")
-				table.insert(anims,{ x = bullet.x - 1.5*20, y = bullet.y - 1.5*20, animation = animImg, scale = 1})
+				table.insert(anims,{ x = bullet.x - 1.5*20, y = bullet.y - 1.5*20, animation = animImg, scaleX = 1, scaleY = 1})
 				FX_whiteflicker()
 				
 				if camera.shake then
@@ -371,8 +382,14 @@ function PlayerClass:update(dt)
 				end
 				camera.shaketype = "explosion"
 				camera.shakedir = math.atan(bullet.speedy/bullet.speedx)
+			end	
+		elseif bullet.type == 1 then
+			if checkCollide(bullet.x,bullet.y) or checkCollideEnnemy(bullet.x,bullet.y, bullet.damage, bullet.speedx/math.abs(bullet.speedx)) then -- Check collision with ground or ennemy
+				table.remove(self.bullets,i)
 			end
 		end
+
+
 		if bullet.timerlife < 0 then  
 			table.remove(self.bullets,i)
 		end
@@ -449,18 +466,20 @@ function  PlayerClass:draw( )
 	for i, bullet in ipairs(self.bullets) do
 		if bullet.timerspawn > 0 then
 			if bullet.bulletype == 1 then
-				bullet.img:draw(bullet.x-bullet.w/2, bullet.y-bullet.h/2, math.atan(bullet.speedy/bullet.speedx))
 				if debug == true then
 					love.graphics.setColor(255,0,0)
 					love.graphics.rectangle("fill", bullet.x-1, bullet.y -1, 2, 2)
 					love.graphics.setColor(255,255,255)
+				else 
+					bullet.img:draw(bullet.x-bullet.w/2, bullet.y-bullet.h/2, math.atan(bullet.speedy/bullet.speedx))
 				end
 			else
-				bullet.img:draw(bullet.x-bullet.w/2, bullet.y-bullet.h/2, 0)
 				if debug == true then
 					love.graphics.setColor(255,0,0)
 					love.graphics.rectangle("fill", bullet.x-1, bullet.y -1, 2, 2)
 					love.graphics.setColor(255,255,255)
+				else 
+					bullet.img:draw(bullet.x-bullet.w/2, bullet.y-bullet.h/2, 0)
 				end
 			end
 			

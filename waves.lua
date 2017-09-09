@@ -16,7 +16,7 @@ function updateWave(dt) -- Update the wave system
 	end
 		
 	if love.timer.getTime() - timerStart > TIME_START_WAVE and start_new_wave == false then
-		SummonEnnemies(wave)
+		SummonEnnemies(200,195,wave)
 		start_new_wave = true
 	end
 end
