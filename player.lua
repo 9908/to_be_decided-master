@@ -24,7 +24,7 @@ player = PlayerClass:new{
 			y = STARTPOSY,
 			h = 16,
 			w = 11,
-
+			gun = love.graphics.newImage("assets/weapon/gun.png"),
 			img = {
 				idle_r = newAnimation(love.graphics.newImage("assets/char/idle.png"), 22, 32, 0.1, 0),
 				walk_r = newAnimation(love.graphics.newImage("assets/char/walk.png"), 22, 32, 0.1, 0),
@@ -153,13 +153,13 @@ function checkCollideEnnemy(local_x,local_y,damage,towards_right) -- Check point
 				score = score + 1
 			end
 			collision = true
-			animImg = newAnimation(love.graphics.newImage("assets/weapon/hit_explosion.png"), 32, 31, 0.1, 0) -- TODO SHOULD BE INITIATED ONLY ONCE
+			animImg = newAnimation(love.graphics.newImage("assets/weapon/hit_explosion.png"), 32, 31, 0.07, 0) -- TODO SHOULD BE INITIATED ONLY ONCE
 			animImg:setMode("once")
 
 			if towards_right == 1 then
-				table.insert(anims,{ x = ennemy.x - 32/2 , y = local_y-32/2  , animation = animImg, scaleX = 1, scaleY = 1})
+				table.insert(anims,{ x = ennemy.x  -	ennemy.w - 32/2 , y = local_y-32/2  , animation = animImg, scaleX = 1, scaleY = 1})
 			else
-				table.insert(anims,{ x = ennemy.x + ennemy.w+32/2, y = local_y+32/2 , animation = animImg, scaleX = -1, scaleY = 1})
+				table.insert(anims,{ x = ennemy.x + 2*ennemy.w+32/2, y = local_y+32/2 , animation = animImg, scaleX = -1, scaleY = 1})
 			end
 		end
 	end
@@ -304,9 +304,19 @@ function PlayerClass:shoot(weapon) -- weapon type = 0 for bazooka, 1 for regular
 			bullet_u = -500
 		end
 		bullet_v = math.random(-30,30)
-		animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 21, 14, 0.1, 0)
+		animBullet = newAnimation(love.graphics.newImage("assets/weapon/small_bullet.png"), 9, 6, 0.1, 0)
 		animBullet:setMode("loop")
-		newBullet = { x = player.x + bullet_u/math.abs(bullet_u) , y = player.y - 5, w=21,h=14, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
+		newBullet = { x = player.x + 10*bullet_u/math.abs(bullet_u) , y = player.y - 2, w=9,h=6, speedx = bullet_u , speedy = bullet_v, img = animBullet,  trailarray = {}, timer = 0.05, timerspawn = 1.3, timerlife = 2, spawn = false, type = weapon, damage = 1}
+		
+		-- Gun flare anim
+		animImg = newAnimation(love.graphics.newImage("assets/weapon/flare.png"), 6,6, 0.025, 0)
+		animImg:setMode("once")
+		if bullet_u/math.abs(bullet_u) == 1 then
+			table.insert(anims,{ x = player.x+9, y = player.y-5, animation = animImg, scaleX =1, scaleY = 1})
+		else
+			table.insert(anims,{ x = player.x-9, y = player.y+1, animation = animImg, scaleX =-1, scaleY = 1})
+		end
+
 	end
 
 	table.insert(player.bullets, newBullet)
@@ -522,6 +532,11 @@ function  PlayerClass:draw( )
 				player.img.idle_r:draw(player.x + player.w ,player.y-player.h-3,0,-1,1)
 			end
 		end
+	end
+	if player.directionX == "right" then
+		love.graphics.draw(player.gun, player.x+2, player.y-4)
+	else
+		love.graphics.draw(player.gun, player.x-2, player.y-4,0,-1,1)
 	end
 end
 
