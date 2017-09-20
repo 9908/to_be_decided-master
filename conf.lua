@@ -16,6 +16,6 @@ function love.conf(t)
 	t.window.fullscreen = false
 	t.window.vsync = true
 	t.window.fsaa = 0
-	t.window.height = 19*48 	
-	t.window.width = 25*48
+	t.window.height = 19*16*3 	-- Works for x2 and x3 but not x1. Some elements like enemy spawn are modified by this value
+	t.window.width = 25*16*3		
 end

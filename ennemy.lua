@@ -2,7 +2,8 @@
 require("entity")
 
 -- constants values for speeds for ennemy
-SPEED = 50 -- Lateral constant speed (MRU)
+SPEED_MAX = 50 -- Lateral constant speed (MRU)
+SPEED = 50
 HEALTH = 4	-- number of lives
 FLYSPEED = 500 
 JUMP_DAMP = 3
@@ -126,6 +127,12 @@ end
 
 function EnnemyClass:updateEnnemy(dt) -- Update a single ennemy
 	self:basicIA()
+
+	if self.x_vel > 0 and self.x_vel < SPEED_MAX then -- TODO VECTOR MOVEMENT
+		self.x_vel = self.x_vel + SPEED*dt
+	elseif self.x_vel < 0 and self.x_vel > -SPEED_MAX then
+		self.x_vel = self.x_vel - SPEED*dt
+	end
 end
 
 function updateEnnemies(dt)			-- Update all ennemyies

@@ -1,8 +1,8 @@
 camera = {}
 camera.x = 0
 camera.y = 0
-camera.sx = 1/3
-camera.sy = 1/3
+camera.sx = 1/(love.graphics.getWidth()/(25*16))
+camera.sy = 1/(love.graphics.getHeight()/(19*16))
 camera.rotation = 0
 camera.speed = 50
 camera.directionX = "left"

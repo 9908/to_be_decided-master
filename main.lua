@@ -3,6 +3,7 @@
 -- Includes
 require("camera")
 require("AnAL") 
+require("slam") 
 require("player")
 require("text")
 require("utilities")
@@ -15,6 +16,8 @@ require("waves")
 slowmode = false
 debug = false
 score = 0 -- number of ennemy killed
+local_dt = 0
+next_time = 0
 
 currentscreenX = 0
 currentscreenY = 0
@@ -42,7 +45,7 @@ function love.load() -- Initial loads
 	loadArt()
 	loadSound()
 
-	--collectgarbage("stop") -- ??? CAUSE FOR THE FPS LOSSES ???
+	--collectgarbage("stop") -- ??? CAUSE FOR THE FPS LOSSES ??? TODO
 
 	min_dt = 1/60
     next_time = love.timer.getTime()
@@ -100,7 +103,7 @@ function love.draw() -- Draw at each iteration
      	next_time = cur_time
      	return
    	end
-   	love.timer.sleep(next_time - cur_time) -- Fixed a cap of FPS at 60
+   	love.timer.sleep(next_time - cur_time) -- Fixed a cap of FPS at 60 - TODO USELESS ??
 
    	elseif GAMESCREEN == "menu" then
 		useDefaultFont()
@@ -136,14 +139,13 @@ end
 
 function love.update(dt) -- Update at each iteration. dt : Time since the last update in seconds.
 
+		--dt = 1/60
+	local_dt = dt
+
 	-- Check keyboard inputs
 	keyboardControls(dt)
 
 	if GAMESCREEN == "play" then
-		if not(music:isPlaying()) then
-			music:play()
-			music:setVolume(0)
-		end
 
 	updateWave(dt)
 
@@ -217,6 +219,7 @@ function drawDebug() -- Draws debug messages
 		-- love.graphics.print("player directionY: "..player.directionY, 459, 10+9*15)
 		-- love.graphics.print("player angle: "..player.angle, 459, 10+10*15)
 
+		love.graphics.printf("dt: ".. string.sub(local_dt, 1,5), 0, 0.15*love.graphics.getHeight(), 0.12*love.graphics.getWidth(),"center") -- Display dt
 		
 		local Count = 0
 
