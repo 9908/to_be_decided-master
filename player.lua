@@ -2,6 +2,7 @@
 
 require("entity")
 require("ennemy")
+require("sheep")
 
 -- constants values for speeds for player 
 WALK = 140			-- Walk speed
@@ -12,7 +13,7 @@ JUMP_VERT = -250	-- Jump velocity
 JUMP_TIME_MAX = 135	-- Max time of extra jump when maintaining jump button
 SHOOT_DELAY = 15	-- Delay between new bullets when holding shoot button
 
-STARTPOSX = 1000	-- Initial player position on map
+STARTPOSX = 100	-- Initial player position on map
 STARTPOSY = 210		-- Initial player position on map
 
 
@@ -147,33 +148,21 @@ end
 
 function checkCollideEnnemy(local_x,local_y,damage,towards_right) -- Check point collision with ennemy. Damage enemy if there is a collision (for bullet)
 
-	collision = false
 	for i, ennemy in ipairs(ennemies) do
 		if Point_Rectangle_CollisionCheck(local_x,local_y, ennemy.x,ennemy.y,ennemy.w,ennemy.h) == true then
-			ennemy.health = ennemy.health - damage;
-			hit_SFX:play()
-				
-			if ennemy.health < 0 then
-				table.remove(ennemies,i)
-				score = score + 1
-			end
-			collision = true
-			animImg = newAnimation(love.graphics.newImage("assets/weapon/hit_explosion.png"), 32, 31, 0.07, 0) -- TODO SHOULD BE INITIATED ONLY ONCE
-			animImg:setMode("once")
-
-			if towards_right == 1 then
-				table.insert(anims,{ x = ennemy.x  -	ennemy.w - 32/2 , y = local_y-32/2  , animation = animImg, scaleX = 1, scaleY = 1})
-				--ennemy.x_vel = 10 -- TODO VECTOR MOVEMENT
-			else
-				table.insert(anims,{ x = ennemy.x + 2*ennemy.w+32/2, y = local_y+32/2 , animation = animImg, scaleX = -1, scaleY = 1})
-				--ennemy.x_vel = -10 -- TODO VECTOR MOVEMENT
-			end
+			ennemy:hit(damage,local_y,towards_right,i)
+			return true
 		end
 	end
 
-	
+	for i, sheep in ipairs(sheeps) do
+		if Point_Rectangle_CollisionCheck(local_x,local_y, sheep.x,sheep.y,sheep.w,sheep.h) == true then
+			sheep:hit()
+			return true
+		end
+	end
 
-	return collision
+	return false
 end
 
 function PlayerClass:checkXcollisionsWithEnnemies(x_col)
@@ -459,6 +448,7 @@ function PlayerClass:update(dt)
 
 	if not(self:checkAmmocollisions(nextX, nextY )[1] == nil)  then
 		self.ammo = self.ammo + 1
+		coin_SFX:play()
 	end
 
 	if self.getstopped == true then

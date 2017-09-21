@@ -32,63 +32,25 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="7" name="groundold2" tilewidth="16" tileheight="16" tilecount="36" columns="18">
-  <image source="groundold2.png" width="288" height="32"/>
-  <tile id="2">
-   <properties>
-    <property name="y0" value="0"/>
-    <property name="y1" value="32"/>
-   </properties>
-  </tile>
-  <tile id="5">
-   <properties>
-    <property name="y0" value="32"/>
-    <property name="y1" value="0"/>
-   </properties>
-  </tile>
-  <tile id="20">
-   <properties>
-    <property name="y0" value="0"/>
-    <property name="y1" value="0"/>
-   </properties>
-  </tile>
-  <tile id="21">
-   <properties>
-    <property name="y0" value="0"/>
-    <property name="y1" value="32"/>
-   </properties>
-  </tile>
-  <tile id="22">
-   <properties>
-    <property name="y0" value="32"/>
-    <property name="y1" value="0"/>
-   </properties>
-  </tile>
-  <tile id="23">
-   <properties>
-    <property name="y0" value="0"/>
-    <property name="y1" value="0"/>
-   </properties>
-  </tile>
- </tileset>
+ <tileset firstgid="7" source="untitled.tsx"/>
  <layer name="BG" width="140" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2MsKgCAQQNHo/z+6VRuRHjomNueAm2gRzs2gbQMAgDz2YtWuw6nWS3lNOzylHXroJpeIGTtv8omYt2byGdEN3NHLP/WcH1H3sY6IXq660Mu/jD4Drv7XrLoye7oPrd+g2bPVS6zRezF7tlqJ1bJHs2cWNW+tvLfSe/nVc2pkbc4AAAAAAAAAAAAAAAAAAAAAYKYDMXUC7w==
+   eJzt0bENACAIRUF0/6EdgVgYJNwlr6L7RAAAAAAAAADAezu5ryRm2bpquur9uzVd9f7dmq56/27xF/8BAAAAAAAAAAAAAAAAAAAAoLMDSm4Ccw==
   </data>
  </layer>
  <layer name="Ground" width="140" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2YEOgyAMRVER//+bl2UxY7Voi0wF7klI5qLMrC8VNUywinefwAOEu0/gD2IyJsNnaw7IS595eYuGz9q259gRjZIXrb9o+1nnHJXMSxBD+74F1p7iuRaRl20mZjGC8n0L2SnpL545R5XWXGbFMlrITi3kxV9nS3Z6wnr319ka53LTI/LyXZvIda6n5j1mZu8+e+TcrHWtcX15YmaW6VPfpcJc5GVbUy03b577yasyc3XdyEtZPS19J82M5xmHpw/UrNvah3JzynvyUc3Hu6jHpMfl8pPm5SgH6XXjzDO0kudqi/h97VxHzkiq5Joh8yK3tfl7GaOzrjOs/5fcr6R/4blya1PZf/d6SG6/aDwG7dh7vp/rKZ7+3XJeeMe45X1HpL2TPBotisoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgJpeDg0CcQ==
-  </data>
- </layer>
- <layer name="Spike" width="140" height="50">
-  <data encoding="base64" compression="zlib">
-   eJzt0qENAAAIA0EM+6+MQYPCkLvkF2gaAQAAAAAAAMC17NjZiolvAAAAAAAAAAAAAAAAAAAAAAAAwH8FG6AAGg==
+   eJzt2dsKgzAQBUBL/P9vLkUE29okXreaGQj6IivmEDfad9RKFePu+ugbuJAW8lAiL99SxXmr5KWevMjLVC4PrfQnJWfmZe6Zb61/Zr8pL/vkJWK/ELEuykvc++iz7pKM9ZNxNP3uu7v2L0esb/ISn5dc/cjvYXO15CU+L1ciL//Tv1yBvNTN21nP6VUnMr+5d57vL4PS/Oz1f61UZ5yv8bjWmnkd91qp+73vkpXBozC2Xn+3AQAAAAAAAAAAAAAAAAAAAAAAANCqJ96FAZA=
   </data>
  </layer>
  <layer name="Ammo" width="140" height="50">
   <data encoding="base64" compression="zlib">
    eJzt1jEKACEMBMBU+f+TbY+DK8QciTBTpZR1DUbwlh8zPOkGVXTpjPwAAGbxP4M7/PVW7YAeU3LP6D3LlBymy+i/K+6hL+zQFwAAAAAAAAAAAAAAAAAAAAAAAACg0gLgDAB/
+  </data>
+ </layer>
+ <layer name="Spike" width="140" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1bEJAEAIA0Ab91/5Z7DRR+/qFEICRgAAAABwXU4fAABN/Ly/6IMNKjvOYh4AAAAAAAAAAAAAAAAAAAAAAAAArnomZgAf
   </data>
  </layer>
 </map>

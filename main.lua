@@ -9,6 +9,7 @@ require("text")
 require("utilities")
 require("FX")
 require("ennemy")
+require("sheep")
 require("entity")
 require("waves")
 
@@ -34,6 +35,7 @@ function love.load() -- Initial loads
 	AdvTiledLoader.path = "maps/"
 	map = AdvTiledLoader.load("level_1.tmx") 
 
+	SummonSheeps(10,200,10)
 	-- Set initial camera location
 	camera:setBounds(0, 0, map.width * map.tileWidth - screenWidth/2, map.height * map.tileHeight - screenHeight/2)
 
@@ -73,6 +75,9 @@ function love.draw() -- Draw at each iteration
 
 	-- Draw Ennemies
 	drawEnnemies()
+
+	-- Draw Sheeps
+	drawSheeps()
 	
 	-- Draw FX
 	drawFX()
@@ -176,6 +181,9 @@ function love.update(dt) -- Update at each iteration. dt : Time since the last u
 	-- Update Ennemies
 	updateEnnemies(dt)
 
+	-- Update Sheeps
+	updateSheeps(dt)
+
 	-- Update camera position
 	camera:update(dt,player.directionX, player.directionY)
 	--camera:setPosition( player.x - (screenWidth/2), player.y - (screenHeight/2))
@@ -220,6 +228,7 @@ function drawDebug() -- Draws debug messages
 		-- love.graphics.print("player angle: "..player.angle, 459, 10+10*15)
 
 		love.graphics.printf("dt: ".. string.sub(local_dt, 1,5), 0, 0.15*love.graphics.getHeight(), 0.12*love.graphics.getWidth(),"center") -- Display dt
+		love.graphics.printf("ennemies alive: ".. tostring(table.getn(ennemies)), 0, 0.17*love.graphics.getHeight(), 0.12*love.graphics.getWidth(),"center") -- Display dt
 		
 		local Count = 0
 

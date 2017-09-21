@@ -1,9 +1,10 @@
 
-anims = {}
+anims = {}	 -- array of anims
+bgs = {} 	 -- array of moving backgrounds
 whiteflicker = false
 whiteflicker_timer = 0
-x1 = 0
-x2 = 0
+nightbgwidth = 640
+
 function loadArt()
 	tree1 = love.graphics.newImage('assets/lvl1/tree1.png')
 	tree2 = love.graphics.newImage('assets/lvl1/tree2.png')
@@ -12,21 +13,43 @@ function loadArt()
 	apple = love.graphics.newImage('assets/lvl1/apple.png')
 	cloud1 = love.graphics.newImage('assets/lvl1/cloud1.png')
 	cloud2 = love.graphics.newImage('assets/lvl1/cloud2.png')
-
 	UI = love.graphics.newImage('assets/UI.png')
+
+	cloud1 = {x1 = 0, x2 = 200, y = 64, speed = 30, img = love.graphics.newImage('assets/lvl1/cloud1.png'), width = 0}
+	cloud2 = {x1 = 0, x2 = 200, y = 53, speed = 45, img = love.graphics.newImage('assets/lvl1/cloud2.png'), width = 0}
+	nightbg1  = {x1 = 0, x2 = 2*nightbgwidth, y= 30-50, speed = 30, img = love.graphics.newImage('assets/lvl1/nightbg1.png'), width = 2*nightbgwidth }
+	nightbg2  = {x1 = 0, x2 = 2*nightbgwidth, y= 20-50, speed = 40, img = love.graphics.newImage('assets/lvl1/nightbg2.png'), width = 2*nightbgwidth }
+	nightbg3  = {x1 = 0, x2 = 2*nightbgwidth, y= 10-50, speed = 50, img = love.graphics.newImage('assets/lvl1/nightbg3.png'), width = 2*nightbgwidth }
+	nightbg4  = {x1 = 0, x2 = 2*nightbgwidth, y= 00-50, speed = 60, img = love.graphics.newImage('assets/lvl1/nightbg4.png'), width = 2*nightbgwidth }
+
+	--table.insert(bgs, cloud1) -- TODO modify cloud
+	--table.insert(bgs, cloud2)
+	table.insert(bgs, nightbg4)
+	table.insert(bgs, nightbg3)
+	table.insert(bgs, nightbg2)
+	table.insert(bgs, nightbg1)
+
 end
 
 function loadSound()
 	--music = love.audio.newSource("assets/sounds/Maxime Dangles - Plane (Original Mix).mp3") 
 	music = love.audio.newSource("assets/sounds/Nathan Fake The Sky Was Pink Holden Remix.mp3")
 	music:setLooping(true)                            -- all instances will be looping
-    --music:setVolume(1)	
+    music:setVolume(0)	
 
 			music:play()
 	jump_SFX = love.audio.newSource("assets/sounds/jump.wav", "static")
+	jump_SFX:setVolume(0.3)	
 	hit_SFX = love.audio.newSource("assets/sounds/hit.wav", "static")
+	hit_SFX:setVolume(0.4)
 	shoot_SFX = love.audio.newSource("assets/sounds/shoot.wav", "static")
+	shoot_SFX:setVolume(0.4)
 	xplosion_SFX = love.audio.newSource("assets/sounds/xplosion.wav", "static")
+	xplosion_SFX:setVolume(0.3)
+	hitsheep_SFX = love.audio.newSource("assets/sounds/rdm8.wav", "static")
+	hitsheep_SFX:setVolume(0.3)
+	coin_SFX = love.audio.newSource("assets/sounds/coin.wav", "static")
+	coin_SFX:setVolume(0.3)
 end
 
 function FX_whiteflicker() -- Flashes white the screen
@@ -50,14 +73,27 @@ function updateFX(dt)
 	else
 		whiteflicker_timer = whiteflicker_timer - dt
 	end
-	x1 = x1-20*dt
-	x2 = x2-13*dt
-	if 23+x1 < 0-250 then
-		x1 = screenWidth/2
+
+	-- Update the backgrounds
+	for i, bg in ipairs(bgs) do
+		bg.x1 = bg.x1 - (bg.speed)*dt
+		bg.x2 = bg.x2 - (bg.speed)*dt
+		if(bg.x1 + bg.width < 0) then
+			bg.x1 = bg.x2 + bg.width
+		elseif (bg.x2 + bg.width < 0) then
+			bg.x2 = bg.x1 + bg.width
+		end
+		--if bg.x1 < -250 then
+		--	bg.x1 = screenWidth
+		--end
 	end
-	if 217+x2 < 0-250 then
-		x2 = screenWidth/2
-	end
+
+	-- if x1 < -250 then
+	-- 	x1 = screenWidth
+	-- end
+	-- if x2 < -250 then
+	-- 	x2 = screenWidth
+	-- end
 end
 
 function drawFX()
@@ -77,19 +113,19 @@ end
 
 function  drawArt( )
 		-- map1. (1,1)
-		local screenWidth = screenWidth/2
-		local screenHeight = screenHeight/2
-		
-		if currentscreenX == 1 and currentscreenY == 0 then 
-			love.graphics.draw(cloud1,23+x1+currentscreenX*screenWidth,currentscreenY*screenHeight+64)
-			love.graphics.draw(cloud2,217+x2+currentscreenX*screenWidth,currentscreenY*screenHeight+53)
-			love.graphics.draw(mountain,218+currentscreenX*screenWidth,currentscreenY*screenHeight+66)
-			love.graphics.draw(bg1,0+currentscreenX*screenWidth,currentscreenY*screenHeight+175)
-			love.graphics.draw(tree1,69+currentscreenX*screenWidth,currentscreenY*screenHeight+130)
-			love.graphics.draw(tree2,331+currentscreenX*screenWidth,currentscreenY*screenHeight+134)
-			love.graphics.draw(apple,105+currentscreenX*screenWidth,currentscreenY*screenHeight+156)
-			love.graphics.draw(apple,88+currentscreenX*screenWidth,currentscreenY*screenHeight+148)
-			love.graphics.draw(apple,74+currentscreenX*screenWidth,currentscreenY*screenHeight+167)
-			love.graphics.draw(apple,350+currentscreenX*screenWidth,currentscreenY*screenHeight+147)
+
+		for i, bg in ipairs(bgs) do
+			love.graphics.draw(bg.img,bg.x1,bg.y)
+			love.graphics.draw(bg.img,bg.x2,bg.y)
 		end
+
+		love.graphics.draw(mountain,218+screenWidth/2,66)
+		love.graphics.draw(bg1,0+screenWidth/2,175)
+		love.graphics.draw(tree1,69+screenWidth/2,130)
+		love.graphics.draw(tree2,screenWidth/2,134)
+		love.graphics.draw(apple,105+screenWidth/2,156)
+		love.graphics.draw(apple,88+screenWidth/2,148)
+		love.graphics.draw(apple,74+screenWidth/2,167)
+		love.graphics.draw(apple,50+screenWidth/2,147)
+
 end
