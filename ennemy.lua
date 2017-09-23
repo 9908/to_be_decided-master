@@ -18,7 +18,7 @@ function SummonEnnemies(local_x,local_y,nbr) -- Spawn new Ennemies
 	
 	for i = 1,nbr do
 		local newEnnemy = EnnemyClass:new{	
-					x = local_x + i * 33 + love.graphics.getWidth()/2, y = local_y, x_vel = SPEED, y_vel = 0, 
+					x = local_x + math.mod(i,5) * 33, y = local_y - i * 11, x_vel = SPEED, y_vel = 0, 
 					h = 26, w = 11, img = love.graphics.newImage('assets/lvl1/ennemy1.png'), 
 					standing = false, relativepos = 0, onslope = "false", state = "" ,
 					health = HEALTH, timerDetection = love.timer.getTime(), sheep_grabbed = nil 	

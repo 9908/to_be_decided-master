@@ -137,9 +137,27 @@ function love.draw() -- Draw at each iteration
 		love.graphics.rectangle("fill", 0,0,screenWidth,screenHeight)
 		love.graphics.setColor(0,0,0)
 		love.graphics.print("You Died",screenWidth*0.4,screenHeight/3,0,2,2)
+		love.graphics.print("Wave: "..wave,screenWidth*0.4,screenHeight/3+60,0,2,2)
+		love.graphics.print("Kills: "..score,screenWidth*0.4,screenHeight/3+80,0,2,2)
 		love.graphics.print("Press 'e' to try again", screenWidth*0.4,screenHeight/2)	
    	end
 
+end
+
+
+function restartLevel()
+	player:reset()
+	ennemies = {}
+	sheeps = {}
+
+	anims = {}
+
+	wave = 0
+	score = 0
+
+	SummonSheeps(10,200,10)
+	
+	GAMESCREEN = "play"	
 end
 
 function love.update(dt) -- Update at each iteration. dt : Time since the last update in seconds.
@@ -155,7 +173,7 @@ function love.update(dt) -- Update at each iteration. dt : Time since the last u
 	updateWave(dt)
 
 
-    if player.life == 0 then
+    if player.life <= 0 then
     	GAMESCREEN = "death"
     end
 

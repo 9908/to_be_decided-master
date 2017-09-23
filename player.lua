@@ -13,7 +13,7 @@ JUMP_VERT = -250	-- Jump velocity
 JUMP_TIME_MAX = 135	-- Max time of extra jump when maintaining jump button
 SHOOT_DELAY = 15	-- Delay between new bullets when holding shoot button
 
-STARTPOSX = 100	-- Initial player position on map
+STARTPOSX = 1000	-- Initial player position on map
 STARTPOSY = 210		-- Initial player position on map
 
 
@@ -71,7 +71,7 @@ player.img.idle_r:setMode("loop")
 player.img.jump_r:setMode("loop")
 player.img.fall_r:setMode("loop")
 
-function PlayerClass:restartlevel()
+function PlayerClass:reset()
 	player.life = 4
 	player.x = STARTPOSX
 	player.y = STARTPOSY
@@ -79,6 +79,7 @@ function PlayerClass:restartlevel()
 	player.x_vel = 0
 	player.y_vel = 0
 	player.isHit = false
+	player.hit_timer = HIT_DELAY
 end
 
 function PlayerClass:jump(dt)

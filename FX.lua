@@ -35,21 +35,36 @@ function loadSound()
 	--music = love.audio.newSource("assets/sounds/Maxime Dangles - Plane (Original Mix).mp3") 
 	music = love.audio.newSource("assets/sounds/Nathan Fake The Sky Was Pink Holden Remix.mp3")
 	music:setLooping(true)                            -- all instances will be looping
-    music:setVolume(0)	
-
-			music:play()
+	music:play()
+	
 	jump_SFX = love.audio.newSource("assets/sounds/jump.wav", "static")
-	jump_SFX:setVolume(0.3)	
 	hit_SFX = love.audio.newSource("assets/sounds/hit.wav", "static")
-	hit_SFX:setVolume(0.4)
 	shoot_SFX = love.audio.newSource("assets/sounds/shoot.wav", "static")
-	shoot_SFX:setVolume(0.4)
 	xplosion_SFX = love.audio.newSource("assets/sounds/xplosion.wav", "static")
-	xplosion_SFX:setVolume(0.3)
 	hitsheep_SFX = love.audio.newSource("assets/sounds/rdm8.wav", "static")
-	hitsheep_SFX:setVolume(0.3)
 	coin_SFX = love.audio.newSource("assets/sounds/coin.wav", "static")
+
+	muteSounds()
+end
+
+function muteSounds()
+	music:setVolume(0)	
+	coin_SFX:setVolume(0)
+	hitsheep_SFX:setVolume(0)
+	xplosion_SFX:setVolume(0)
+	shoot_SFX:setVolume(0)
+	hit_SFX:setVolume(0)
+	jump_SFX:setVolume(0)	
+end
+
+function resumeSounds()
+    music:setVolume(1)	
 	coin_SFX:setVolume(0.3)
+	hitsheep_SFX:setVolume(0.3)
+	xplosion_SFX:setVolume(0.3)
+	shoot_SFX:setVolume(0.4)
+	hit_SFX:setVolume(0.4)
+	jump_SFX:setVolume(0.3)	
 end
 
 function FX_whiteflicker() -- Flashes white the screen

@@ -47,8 +47,7 @@ function keyboardControls(dt)
 		elseif GAMESCREEN == "pause" then
 			GAMESCREEN = "play"
 		elseif GAMESCREEN == "death" then
-			player:restartlevel()
-			GAMESCREEN = "play"	
+			restartLevel()
 		elseif GAMESCREEN == "play" then
 			if (player.canShoot) then
 				player:shoot(1)
@@ -74,8 +73,7 @@ function keyboardControls(dt)
 		elseif GAMESCREEN == "pause" then
 			GAMESCREEN = "play"
 		elseif GAMESCREEN == "death" then
-			player:restartlevel()
-			GAMESCREEN = "play"	
+			restartLevel()
 		elseif GAMESCREEN == "play" then
 			if (player.canShoot) then
 				player:shoot(0)
@@ -110,9 +108,9 @@ function keyboardControls(dt)
 			isPressedm = true
 
 			if music:getVolume() == 0 then
-				music:setVolume(1)
+				resumeSounds()
 			else
-				music:setVolume(0)
+				muteSounds()
 			end	
 		end
 	else
@@ -135,7 +133,7 @@ function keyboardControls(dt)
 
 	-- spawn ennemies
 	if love.keyboard.isDown("z") then
-		SummonEnnemies(player.x - love.graphics.getWidth()/2,player.y-200,1)
+		SummonEnnemies(player.x ,player.y-200,1)
 	end
 
 

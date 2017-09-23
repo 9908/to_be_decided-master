@@ -80,6 +80,9 @@ end
 
 function SheepClass:updateSheep(dt) -- Update a single Sheep
 	self:basicIA()
+	if self.x > 1120 then
+		GAMESCREEN = "death"
+	end
 end
 
 function updateSheeps(dt)			-- Update all Sheepies
